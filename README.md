@@ -22,3 +22,7 @@ Give some thought to the following:
 - The number of requests may exceed the capacity of this VM, how might you solve that? Bonus if you implement this;
 - What are some strategies you might use to update the service with new URLs? Updates may be as much as 5 thousand URLs a day with updates arriving every 10 minutes;
 - Bonus points if you containerize the app.
+
+## Initial Thoughts
+
+- Use a [Bloom Filter](https://en.wikipedia.org/wiki/Bloom_filter) to quickly determine if a URL is benign, in which case we can finish the operation fast, otherwise run the malware identifier against it;
