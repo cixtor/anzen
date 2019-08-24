@@ -31,7 +31,7 @@ Give some thought to the following:
 - Worst case scenario is, every URL (including query params) is different and malicious;
 - Because the query string is also taken in consideration, we may be able to split the malware check in subsets of the URL. For example, check if the hostname is blacklisted, check if the hostname+port is blacklisted, if not then proceed to check the entire URL against the malware database. We could use a Bloom Filter here as well for the hostname;
 - Can we use HAProxy to manage a swarm of web services? This way we can distribute the load and offer high availability. However, this doesn’t help to address the memory consumption on each server;
-- Google Safe Browsing API uses [gRPC Transcoding](https://github.com/googleapis/googleapis/blob/master/google/api/http.proto) syntax for communication, but I find it simpler to use JSON for prototypes;
+- Google Safe Browsing API uses [gRPC Transcoding](https://github.com/googleapis/googleapis/blob/master/google/api/http.proto) syntax for communication. For the sake of simplicity, this web service will return a JSON encoded object with some information associated to the URL.
 
 ## Google Safe Browsing
 

@@ -4,5 +4,5 @@ import (
 	"testing"
 )
 
-func TestThreatLevel(t *testing.T) {
+func TestThreatType(t *testing.T) {
 }
