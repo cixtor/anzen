@@ -27,6 +27,7 @@ Give some thought to the following:
 
 - Use a [Bloom Filter](https://en.wikipedia.org/wiki/Bloom_filter) to quickly determine if a URL is benign, in which case we can finish the operation fast, otherwise run the malware identifier against it;
 - A [Cuckoo Filter](https://www.cs.cmu.edu/~dga/papers/cuckoo-conext2014.pdf) could be an option too. A cuckoo filter can also delete existing items, which is not supported by Bloom filters, and since infected URLs can be cleaned, it makes sense to offer the ability to remove them from the malware database;
+- **Distributed Bloom/Cuckoo Filter?** Definitely possible, as long as the size and hash functions is the same in all the nodes. [Twitter effectively uses a Distributed Bloom Filter](https://twitter.github.io/algebird/datatypes/approx/bloom_filter.html) taking advantages of the monoid features of the data structure;
 - LRU cache for the most common malicious URLs. Keep track of how many hits other malicious URLs get. Update the cache every few minutes with the list of URLs with more hits;
 - Assume the proxy is internal which means implementing a rate limiter is not an option;
 - Worst case scenario is, every URL (including query params) is different and malicious;
