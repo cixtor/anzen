@@ -30,6 +30,7 @@ Give some thought to the following:
 - **Distributed Bloom/Cuckoo Filter?** Definitely possible, as long as the size and hash functions is the same in all the nodes. [Twitter effectively uses a Distributed Bloom Filter](https://twitter.github.io/algebird/datatypes/approx/bloom_filter.html) taking advantages of the monoid features of the data structure;
 - LRU cache for the most common malicious URLs. Keep track of how many hits other malicious URLs get. Update the cache every few minutes with the list of URLs with more hits;
 - Assume the proxy is internal which means implementing a rate limiter is not an option;
+- Assume the HTTP proxy enforces URL encoding for the resource path and query parameters. Otherwise, the HTTP router in this webservice will ignore parts of the original URL and return a false positive;
 - Worst case scenario is, every URL (including query params) is different and malicious;
 - Because the query string is also taken in consideration, we may be able to split the malware check in subsets of the URL. For example, check if the hostname is blacklisted, check if the hostname+port is blacklisted, if not then proceed to check the entire URL against the malware database. We could use a Bloom Filter here as well for the hostname;
 - Can we use HAProxy to manage a swarm of web services? This way we can distribute the load and offer high availability. However, this doesn’t help to address the memory consumption on each server;
