@@ -1,6 +1,11 @@
 package main
 
-import "time"
+import (
+	"crypto/sha256"
+	"log"
+	"net/url"
+	"time"
+)
 
 // ThreatInfo represents the JSON structure of the metadata associated to a
 // malicious URL if found in the malware database. Notice some type properties
@@ -77,5 +82,36 @@ const ttNone string = "NONE"
 // Ref: https://developers.google.com/safe-browsing/v4/reference/rest/v4/ThreatType
 // Ref: https://developers.google.com/safe-browsing/v4/reference/rest/v4/PlatformType
 func ThreatType(host string, path string) (ThreatInfo, error) {
+	// NOTES(yorman): check if the SHA256 of the URL exists in the malware
+	// database. If not found, we immediately return NONE as the threat type.
+	// Because we are using a probabilistic data structure, if the answer is
+	// yes, we need to double check in subsequent steps to make sure this is
+	// not a false positive.
+	query := HashURL(host, path)
+
+	if !app.Database.Lookup(query) {
+		return ThreatInfo{Threat: ttNone}, nil
+	}
+
 	return ThreatInfo{Threat: ttNone}, nil
+}
+
+func HashURL(host string, path string) []byte {
+	decoded, err := url.QueryUnescape(path)
+
+	if err != nil {
+		log.Println("HashURL", "url.QueryUnescape", err, path)
+		return []byte{}
+	}
+
+	return SHA256([]byte(host + "/" + decoded))
+}
+
+func SHA256(input []byte) []byte {
+	hash := sha256.New()
+	if _, err := hash.Write(input); err != nil {
+		log.Println("HashURL", "SHA256", err, input)
+		return []byte{}
+	}
+	return hash.Sum(nil)
 }
