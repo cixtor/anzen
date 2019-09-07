@@ -1,10 +1,15 @@
 package main
 
 import (
+	"time"
+
 	cuckoo "github.com/seiflotfy/cuckoofilter"
 )
 
 type Application struct {
+	// ListenAddr is the hostname and port where the server is listening.
+	ListenAddr string
+
 	// Database is where the SHA256 of the malicious URLs are stored.
 	Database *cuckoo.Filter
 
@@ -19,6 +24,14 @@ type Application struct {
 	// is added to the blacklist and during the graceful server shutdown. The
 	// database is loaded into memory when the server is restarted.
 	Storage string
+
+	ReadTimeout time.Duration
+
+	ReadHeaderTimeout time.Duration
+
+	WriteTimeout time.Duration
+
+	IdleTimeout time.Duration
 }
 
 func NewApplication() *Application {
