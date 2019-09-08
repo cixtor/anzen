@@ -2,6 +2,7 @@ package main
 
 import (
 	"crypto/sha256"
+	"fmt"
 	"log"
 	"net/url"
 	"time"
@@ -81,30 +82,32 @@ const ttNone string = "NONE"
 //
 // Ref: https://developers.google.com/safe-browsing/v4/reference/rest/v4/ThreatType
 // Ref: https://developers.google.com/safe-browsing/v4/reference/rest/v4/PlatformType
-func ThreatType(host string, path string) (ThreatInfo, error) {
+func (app *Application) ThreatType(query string) (ThreatInfo, error) {
+	if app.Database == nil {
+		return ThreatInfo{}, fmt.Errorf("database was not initialized")
+	}
+
 	// NOTES(yorman): check if the SHA256 of the URL exists in the malware
 	// database. If not found, we immediately return NONE as the threat type.
 	// Because we are using a probabilistic data structure, if the answer is
 	// yes, we need to double check in subsequent steps to make sure this is
 	// not a false positive.
-	query := HashURL(host, path)
-
-	if !app.Database.Lookup(query) {
+	if !app.Database.Lookup(HashURL(query)) {
 		return ThreatInfo{Threat: ttNone}, nil
 	}
 
 	return ThreatInfo{Threat: ttNone}, nil
 }
 
-func HashURL(host string, path string) []byte {
-	decoded, err := url.QueryUnescape(path)
+func HashURL(query string) []byte {
+	decoded, err := url.QueryUnescape(query)
 
 	if err != nil {
-		log.Println("HashURL", "url.QueryUnescape", err, path)
+		log.Println("HashURL", "url.QueryUnescape", err, query)
 		return []byte{}
 	}
 
-	return SHA256([]byte(host + "/" + decoded))
+	return SHA256([]byte(decoded))
 }
 
 func SHA256(input []byte) []byte {
