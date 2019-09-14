@@ -1,11 +1,7 @@
 package main
 
 import (
-	"crypto/sha256"
 	"fmt"
-	"log"
-	"net/url"
-	"time"
 )
 
 // ThreatInfo represents the JSON structure of the metadata associated to a
@@ -69,34 +65,22 @@ func (app *Application) ThreatType(query string) (ThreatInfo, error) {
 		return ThreatInfo{}, fmt.Errorf("database was not initialized")
 	}
 
+	hashed := HashURL(query)
+
 	// NOTES(yorman): check if the SHA256 of the URL exists in the malware
 	// database. If not found, we immediately return NONE as the threat type.
 	// Because we are using a probabilistic data structure, if the answer is
 	// yes, we need to double check in subsequent steps to make sure this is
 	// not a false positive.
-	if !app.Database.Lookup(HashURL(query)) {
+	if !app.Database.Lookup(hashed) {
 		return ThreatInfo{Threat: ttNone}, nil
 	}
 
-	return ThreatInfo{Threat: ttNone}, nil
-}
-
-func HashURL(query string) []byte {
-	decoded, err := url.QueryUnescape(query)
-
-	if err != nil {
-		log.Println("HashURL", "url.QueryUnescape", err, query)
-		return []byte{}
+	info := ThreatInfo{
+		URL:    query,
+		Threat: ttMalware,
+		Hash:   fmt.Sprintf("%x", hashed),
 	}
 
-	return SHA256([]byte(decoded))
-}
-
-func SHA256(input []byte) []byte {
-	hash := sha256.New()
-	if _, err := hash.Write(input); err != nil {
-		log.Println("HashURL", "SHA256", err, input)
-		return []byte{}
-	}
-	return hash.Sum(nil)
+	return info, nil
 }
