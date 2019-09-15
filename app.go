@@ -35,7 +35,7 @@ type Application struct {
 }
 
 func NewApplication() *Application {
-	return &Application{}
+	return &Application{Database: cuckoo.NewFilter(1000)}
 }
 
 func (app *Application) LoadDatabase() {
