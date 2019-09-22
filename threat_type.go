@@ -15,15 +15,13 @@ import (
 //     "threat": "MALWARE",
 //     "platform": "WINDOWS",
 //     "hash": "6a46bf81098df5b863c4387ee7cf1592ec40ff7aec03088be1b48b18afa8122b",
-//     "url": "http://www.example.com/private/malicious.exe",
-//     "cache": 300
+//     "url": "http://www.example.com/private/malicious.exe"
 //   }
 type ThreatInfo struct {
-	Threat   string        `json:"threat,omitempty"`
-	Platform string        `json:"platform,omitempty"`
-	Hash     string        `json:"hash,omitempty"`
-	URL      string        `json:"url,omitempty"`
-	Cache    time.Duration `json:"cache,omitempty"`
+	Threat   string `json:"threat,omitempty"`
+	Platform string `json:"platform,omitempty"`
+	Hash     string `json:"hash,omitempty"`
+	URL      string `json:"url,omitempty"`
 }
 
 // ThreatType inspects the hostname, port number, URL path and query string to
