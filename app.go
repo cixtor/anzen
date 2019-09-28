@@ -25,6 +25,12 @@ type Application struct {
 	// database is loaded into memory when the server is restarted.
 	Storage string
 
+	// Hostname is the domain associated to the web service. The hostname is
+	// also used to construct the URL for the server pool hosting the malware
+	// database. For example, if the hostname is example.test then the server
+	// pool will look like this: threat-info-PREFIX.example.test
+	Hostname string
+
 	ReadTimeout time.Duration
 
 	ReadHeaderTimeout time.Duration
@@ -32,6 +38,8 @@ type Application struct {
 	WriteTimeout time.Duration
 
 	IdleTimeout time.Duration
+
+	RequestTimeout time.Duration
 }
 
 func NewApplication() *Application {

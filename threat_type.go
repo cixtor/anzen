@@ -1,7 +1,10 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"log"
+	"net/http"
 )
 
 // ThreatInfo represents the JSON structure of the metadata associated to a
@@ -74,10 +77,43 @@ func (app *Application) ThreatType(query string) (ThreatInfo, error) {
 		return ThreatInfo{Threat: ttNone}, nil
 	}
 
-	info := ThreatInfo{
-		URL:    query,
-		Threat: ttMalware,
-		Hash:   fmt.Sprintf("%x", hashed),
+	encoded := fmt.Sprintf("%x", hashed)
+
+	// NOTES(yorman): someone probably messed up the configuration and set a
+	// cluster prefix length bigger than sixty-four. This causes the subset of
+	// the URL hash to be out of range.
+	if clusterPrefixLength > len(encoded) {
+		return ThreatInfo{}, fmt.Errorf("cluster prefix length is bigger than SHA256")
+	}
+
+	target := fmt.Sprintf(
+		"http://threat-info-%s.%s/api/retrieve?hash=%s",
+		encoded[0:clusterPrefixLength],
+		app.Hostname,
+		encoded,
+	)
+
+	var err error
+	var req *http.Request
+	var res *http.Response
+	var info ThreatInfo
+
+	if req, err = http.NewRequest(http.MethodGet, target, nil); err != nil {
+		return ThreatInfo{}, fmt.Errorf("ThreatType http.NewRequest %s", err)
+	}
+
+	if res, err = client.Do(req); err != nil {
+		return ThreatInfo{}, fmt.Errorf("ThreatType client.Do %s", err)
+	}
+
+	defer func() {
+		if err := res.Body.Close(); err != nil {
+			log.Println("ThreatType", "res.Body.Close", err)
+		}
+	}()
+
+	if err = json.NewDecoder(res.Body).Decode(&info); err != nil {
+		return ThreatInfo{}, fmt.Errorf("ThreatType json.Decode %s", err)
 	}
 
 	return info, nil
