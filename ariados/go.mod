@@ -1,4 +1,4 @@
-module bitbucket.org/cixtor/babywaf
+module bitbucket.org/cixtor/babywaf/ariados
 
 go 1.13
 

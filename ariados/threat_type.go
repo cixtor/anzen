@@ -87,7 +87,7 @@ func (app *Application) ThreatType(query string) (ThreatInfo, error) {
 	}
 
 	target := fmt.Sprintf(
-		"http://threat-info-%s.%s/api/retrieve?hash=%s",
+		"http://threat-info-%s.%s/api/retrieve/%s",
 		encoded[0:clusterPrefixLength],
 		app.Hostname,
 		encoded,
@@ -102,6 +102,8 @@ func (app *Application) ThreatType(query string) (ThreatInfo, error) {
 		return ThreatInfo{}, fmt.Errorf("ThreatType http.NewRequest %s", err)
 	}
 
+	req.Header.Set("X-Auth-Secret", app.AuthSecret)
+
 	if res, err = client.Do(req); err != nil {
 		return ThreatInfo{}, fmt.Errorf("ThreatType client.Do %s", err)
 	}
@@ -111,6 +113,10 @@ func (app *Application) ThreatType(query string) (ThreatInfo, error) {
 			log.Println("ThreatType", "res.Body.Close", err)
 		}
 	}()
+
+	if res.StatusCode != http.StatusOK {
+		return ThreatInfo{}, fmt.Errorf("ThreatType StatusCode %d from `%s`", res.StatusCode, target)
+	}
 
 	if err = json.NewDecoder(res.Body).Decode(&info); err != nil {
 		return ThreatInfo{}, fmt.Errorf("ThreatType json.Decode %s", err)

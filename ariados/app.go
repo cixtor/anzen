@@ -31,6 +31,9 @@ type Application struct {
 	// pool will look like this: threat-info-PREFIX.example.test
 	Hostname string
 
+	// AuthSecret is the shared secret key to communicate with other servers.
+	AuthSecret string
+
 	ReadTimeout time.Duration
 
 	ReadHeaderTimeout time.Duration

@@ -8,7 +8,7 @@ import (
 )
 
 func init() {
-	router.GET("/insert/*query", insert)
+	router.GET("/insert/1/*query", insert)
 }
 
 func insert(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
