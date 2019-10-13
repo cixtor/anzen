@@ -1,0 +1,115 @@
+services:
+  ariados:
+    container_name: babywaf_ariados
+    image: babywaf_ariados:latest
+    links:
+    - dugtrio0:threat-info-0.babywaf.test
+    - dugtrio1:threat-info-1.babywaf.test
+    - dugtrio2:threat-info-2.babywaf.test
+    - dugtrio3:threat-info-3.babywaf.test
+    - dugtrio4:threat-info-4.babywaf.test
+    - dugtrio5:threat-info-5.babywaf.test
+    - dugtrio6:threat-info-6.babywaf.test
+    - dugtrio7:threat-info-7.babywaf.test
+    - dugtrio8:threat-info-8.babywaf.test
+    - dugtrio9:threat-info-9.babywaf.test
+    - dugtrioa:threat-info-a.babywaf.test
+    - dugtriob:threat-info-b.babywaf.test
+    - dugtrioc:threat-info-c.babywaf.test
+    - dugtriod:threat-info-d.babywaf.test
+    - dugtrioe:threat-info-e.babywaf.test
+    - dugtriof:threat-info-f.babywaf.test
+    ports:
+    - 8080:80/tcp
+  # NOTES(yorman): this is an ugly hack on Docker Compose to allow me to create
+  # multiple replicas of the same Docker image with different names and ports.
+  # There is a DEPLOY section with a REPLICAS attribute but it only works in
+  # swarm mode. There is also a --scale flag but we cannot specify this in
+  # the docker-compose.yml file yet.
+  #
+  # This is definitely going to take away some bonus points from the interview
+  # but I cannot be bothered to improve this at the moment. Hopefully it works
+  # as intended and maybe the interviewer will give me feedback in case they
+  # know how to do this without so much repetition.
+  dugtrio0:
+    container_name: babywaf_dugtrio_0
+    image: babywaf_dugtrio:latest
+    ports:
+    - 9000:80/tcp
+  dugtrio1:
+    container_name: babywaf_dugtrio_1
+    image: babywaf_dugtrio:latest
+    ports:
+    - 9001:80/tcp
+  dugtrio2:
+    container_name: babywaf_dugtrio_2
+    image: babywaf_dugtrio:latest
+    ports:
+    - 9002:80/tcp
+  dugtrio3:
+    container_name: babywaf_dugtrio_3
+    image: babywaf_dugtrio:latest
+    ports:
+    - 9003:80/tcp
+  dugtrio4:
+    container_name: babywaf_dugtrio_4
+    image: babywaf_dugtrio:latest
+    ports:
+    - 9004:80/tcp
+  dugtrio5:
+    container_name: babywaf_dugtrio_5
+    image: babywaf_dugtrio:latest
+    ports:
+    - 9005:80/tcp
+  dugtrio6:
+    container_name: babywaf_dugtrio_6
+    image: babywaf_dugtrio:latest
+    ports:
+    - 9006:80/tcp
+  dugtrio7:
+    container_name: babywaf_dugtrio_7
+    image: babywaf_dugtrio:latest
+    ports:
+    - 9007:80/tcp
+  dugtrio8:
+    container_name: babywaf_dugtrio_8
+    image: babywaf_dugtrio:latest
+    ports:
+    - 9008:80/tcp
+  dugtrio9:
+    container_name: babywaf_dugtrio_9
+    image: babywaf_dugtrio:latest
+    ports:
+    - 9009:80/tcp
+  dugtrioa:
+    container_name: babywaf_dugtrio_a
+    image: babywaf_dugtrio:latest
+    ports:
+    - 9010:80/tcp
+  dugtriob:
+    container_name: babywaf_dugtrio_b
+    image: babywaf_dugtrio:latest
+    ports:
+    - 9011:80/tcp
+  dugtrioc:
+    container_name: babywaf_dugtrio_c
+    image: babywaf_dugtrio:latest
+    ports:
+    - 9012:80/tcp
+  dugtriod:
+    container_name: babywaf_dugtrio_d
+    image: babywaf_dugtrio:latest
+    ports:
+    - 9013:80/tcp
+  dugtrioe:
+    container_name: babywaf_dugtrio_e
+    image: babywaf_dugtrio:latest
+    ports:
+    - 9014:80/tcp
+  dugtriof:
+    container_name: babywaf_dugtrio_f
+    image: babywaf_dugtrio:latest
+    ports:
+    - 9015:80/tcp
+version: '3.1'
+
