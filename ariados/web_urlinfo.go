@@ -18,6 +18,7 @@ func urlinfo(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	var info ThreatInfo
 
 	if query, err = TargetURL(ps); err != nil {
+		log.Println("urlinfo", "TargetURL", err)
 		http.Error(w, http.StatusText(400), http.StatusBadRequest)
 		return
 	}
@@ -32,4 +33,6 @@ func urlinfo(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		log.Println("urlinfo", "json.Encode", err)
 		return
 	}
+
+	log.Println("urlinfo", "ThreatType", "success")
 }

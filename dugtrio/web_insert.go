@@ -14,18 +14,20 @@ func (redis *FakeRedis) Insert(w http.ResponseWriter, r *http.Request, ps httpro
 
 	// NOTES(yorman): rudimentary API authentication system.
 	if key := r.Header.Get("X-Auth-Secret"); key != secret {
+		log.Println("insert", "x-auth-secret", "invalid")
 		http.Error(w, http.StatusText(403), http.StatusForbidden)
 		return
 	}
 
 	if hash = ps.ByName("hash"); hash == "" {
+		log.Println("insert", "url-hash", "missing")
 		http.Error(w, http.StatusText(400), http.StatusBadRequest)
 		return
 	}
 
 	// NOTES(yorman): expecting JSON({threat:string, platform:string, url:string})
 	if err := json.NewDecoder(r.Body).Decode(&info); err != nil {
-		log.Println("FakeRedis", "Insert", err)
+		log.Println("insert", "Database", err)
 		http.Error(w, http.StatusText(400), http.StatusBadRequest)
 		return
 	}
@@ -42,5 +44,6 @@ func (redis *FakeRedis) Insert(w http.ResponseWriter, r *http.Request, ps httpro
 		redis.Unlock()
 	}
 
+	log.Println("insert", "Database", "success")
 	w.WriteHeader(http.StatusOK)
 }

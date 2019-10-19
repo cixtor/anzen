@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 
@@ -18,7 +17,7 @@ func main() {
 	router.POST("/api/insert/:hash", fakeRedis.Insert)
 	router.GET("/api/retrieve/:hash", fakeRedis.Retrieve)
 
-	fmt.Println("Threat-Info server is ready")
+	log.Println("Threat-Info server is ready")
 
 	if err := http.ListenAndServe(":80", router); err != nil {
 		log.Println("http.ListenAndServe", err)

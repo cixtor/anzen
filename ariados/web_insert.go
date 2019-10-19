@@ -16,6 +16,7 @@ func insert(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	var query string
 
 	if query, err = TargetURL(ps); err != nil {
+		log.Println("insert", "TargetURL", err)
 		http.Error(w, http.StatusText(400), http.StatusBadRequest)
 		return
 	}
@@ -25,6 +26,6 @@ func insert(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		return
 	}
 
-	log.Println("app.Database.Insert", "failure", query)
+	log.Println("insert", "Database", "failure", query)
 	http.Error(w, http.StatusText(500), http.StatusInternalServerError)
 }

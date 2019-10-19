@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -17,7 +16,7 @@ var router = httprouter.New()
 var client = &http.Client{}
 
 func main() {
-	fmt.Println("Starting web service")
+	log.Println("Starting web service")
 
 	flag.UintVar(&app.Capacity, "capacity", 10000000, "Capacity for the Cuckoo Filter in bytes")
 	flag.StringVar(&app.Storage, "storage", "storage.db", "Filename with a copy of the Cuckoo Filter")
@@ -48,7 +47,7 @@ func main() {
 	// in the queue that are taking longer than expected.
 	client.Timeout = app.RequestTimeout
 
-	fmt.Println("Listening on " + app.ListenAddr)
+	log.Println("Listening on " + app.ListenAddr)
 
 	if err := server.ListenAndServe(); err != nil {
 		log.Println("http.ListenAndServe", err)
