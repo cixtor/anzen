@@ -25,6 +25,25 @@ func TargetURL(ps httprouter.Params) (string, error) {
 	return strings.TrimLeft(query, "/"), nil
 }
 
+func DugtrioURL(hostname string, serverPrefixN int, action string, hashed []byte) (string, error) {
+	encoded := fmt.Sprintf("%x", hashed)
+
+	// NOTES(yorman): someone probably messed up the configuration and set a
+	// cluster prefix length bigger than sixty-four. This causes the subset of
+	// the URL hash to be out of range.
+	if serverPrefixN > len(encoded) {
+		return "", fmt.Errorf("cluster prefix length is bigger than SHA256")
+	}
+
+	return fmt.Sprintf(
+		"http://threat-info-%s.%s/api/%s/%s",
+		encoded[0:serverPrefixN],
+		hostname,
+		action,
+		encoded,
+	), nil
+}
+
 func HashURL(query string) []byte {
 	decoded, err := url.QueryUnescape(query)
 

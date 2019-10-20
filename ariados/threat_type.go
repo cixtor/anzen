@@ -62,6 +62,12 @@ type ThreatInfo struct {
 // Ref: https://developers.google.com/safe-browsing/v4/reference/rest/v4/ThreatType
 // Ref: https://developers.google.com/safe-browsing/v4/reference/rest/v4/PlatformType
 func (app *Application) ThreatType(query string) (ThreatInfo, error) {
+	var err error
+	var req *http.Request
+	var res *http.Response
+	var info ThreatInfo
+	var target string
+
 	if app.Database == nil {
 		return ThreatInfo{}, fmt.Errorf("database was not initialized")
 	}
@@ -77,26 +83,9 @@ func (app *Application) ThreatType(query string) (ThreatInfo, error) {
 		return ThreatInfo{Threat: ttNone}, nil
 	}
 
-	encoded := fmt.Sprintf("%x", hashed)
-
-	// NOTES(yorman): someone probably messed up the configuration and set a
-	// cluster prefix length bigger than sixty-four. This causes the subset of
-	// the URL hash to be out of range.
-	if clusterPrefixLength > len(encoded) {
-		return ThreatInfo{}, fmt.Errorf("cluster prefix length is bigger than SHA256")
+	if target, err = DugtrioURL(app.Hostname, app.ServerPrefixN, "retrieve", hashed); err != nil {
+		return ThreatInfo{}, err
 	}
-
-	target := fmt.Sprintf(
-		"http://threat-info-%s.%s/api/retrieve/%s",
-		encoded[0:clusterPrefixLength],
-		app.Hostname,
-		encoded,
-	)
-
-	var err error
-	var req *http.Request
-	var res *http.Response
-	var info ThreatInfo
 
 	if req, err = http.NewRequest(http.MethodGet, target, nil); err != nil {
 		return ThreatInfo{}, fmt.Errorf("ThreatType http.NewRequest %s", err)

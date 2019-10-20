@@ -28,6 +28,7 @@ func main() {
 	flag.DurationVar(&app.WriteTimeout, "writeTimeout", time.Second*5, "Maximum amount of time to write the response")
 	flag.DurationVar(&app.IdleTimeout, "idleTimeout", time.Second*5, "Maximum amount of time to wait for the client")
 	flag.DurationVar(&app.RequestTimeout, "requestTimeout", time.Second*5, "Maximum amount of time to wait for internal requests")
+	flag.IntVar(&app.ServerPrefixN, "serverPrefixN", 1, "Number of characters from the URL-hash to build server pool")
 
 	flag.Parse()
 
