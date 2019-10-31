@@ -27,6 +27,25 @@ Assumming you are familiar with [Docker](https://en.wikipedia.org/wiki/Docker_%2
 
 Executing `make clean` will stop and remove all the Docker containers and images.
 
+## Unit-tests Tests
+
+Only the main web service contains a couple of unit-tests:
+
+```sh
+cd ariados/ && go test -v ./...
+```
+
+## Integration Tests
+
+```sh
+# Terminal one (top screen)
+docker-compose logs -f
+
+# Terminal two (bottom screen)
+make test-insert
+make test-retrieve
+```
+
 ## Research Notes: Initial Ideas
 
 - Use a [Bloom Filter](https://en.wikipedia.org/wiki/Bloom_filter) to quickly determine if a URL is benign, in which case we can finish the operation fast, otherwise run the malware identifier against it;
