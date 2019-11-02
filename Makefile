@@ -58,3 +58,9 @@ test-retrieve:
 	curl -XGET "http://localhost:8080/urlinfo/1/adv.riza.it/www/delivery/ajs.php%3Fzoneid%3D51%26cb%3D96020978060"
 	curl -XGET "http://localhost:8080/urlinfo/1/www.ywvcomputerprocess.info/errorreport/ty5ug6h4ndma4/"
 
+benchmark-safe:
+	wrk -t4 -c100 -d60s --latency "http://localhost:8080/urlinfo/1/cixtor.com/hello%2fworld"
+
+benchmark-unsafe:
+	curl -XPOST "http://localhost:8080/insert/MALWARE/twitter-scanner.com/hello%2fworld"
+	wrk -t4 -c100 -d60s --latency "http://localhost:8080/urlinfo/1/twitter-scanner.com/hello%2fworld"

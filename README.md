@@ -46,6 +46,48 @@ make test-insert
 make test-retrieve
 ```
 
+## Benchmarks
+
+Execute `make benchmark-safe` and `make benchmark-unsafe` to stress test the web service. Please keep in mind this is still a proof-of-concept, there is a lot of room for improvements, specially regarding the persistent storage and the implementation of the LRU cache. Right now, the web service can handle **±1454.79 reqs/sec** when looking up safe URLs and **±414.07 reqs/sec** when looking up unsafe URLs.
+
+Stress testing the web service with a safe URL returns 1454.79 reqs/sec.
+
+```
+$ wrk -t4 -c100 -d60s --latency "http://localhost:8080/urlinfo/1/SAFE_URL"
+Running 1m test @ http://localhost:8080/urlinfo/1/SAFE_URL
+  4 threads and 100 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    69.02ms   31.45ms 296.04ms   70.06%
+    Req/Sec   365.69    117.20   770.00     65.62%
+  Latency Distribution
+     50%   66.26ms
+     75%   88.04ms
+     90%  111.56ms
+     99%  150.65ms
+  87415 requests in 1.00m, 11.25MB read
+Requests/sec:   1454.79
+Transfer/sec:    191.79KB
+```
+
+Stress testing the web service with an unsafe URL returns 322.42 reqs/sec.
+
+```
+$ wrk -t4 -c100 -d60s --latency "http://localhost:8080/urlinfo/1/UNSAFE_URL"
+Running 1m test @ http://localhost:8080/urlinfo/1/UNSAFE_URL
+  4 threads and 100 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   240.97ms   79.18ms 695.40ms   71.82%
+    Req/Sec   104.33     44.67   303.00     73.90%
+  Latency Distribution
+     50%  240.12ms
+     75%  283.48ms
+     90%  337.75ms
+     99%  469.75ms
+  24879 requests in 1.00m, 4.22MB read
+Requests/sec:    414.07
+Transfer/sec:     71.98KB
+```
+
 ## Research Notes: Initial Ideas
 
 - Use a [Bloom Filter](https://en.wikipedia.org/wiki/Bloom_filter) to quickly determine if a URL is benign, in which case we can finish the operation fast, otherwise run the malware identifier against it;
