@@ -45,5 +45,6 @@ func (redis *FakeRedis) Insert(w http.ResponseWriter, r *http.Request, ps httpro
 	}
 
 	log.Println("insert", "Database", "success")
+
 	w.WriteHeader(http.StatusOK)
 }
