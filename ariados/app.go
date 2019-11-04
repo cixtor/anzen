@@ -68,6 +68,8 @@ type Application struct {
 	IdleTimeout time.Duration
 
 	RequestTimeout time.Duration
+
+	ShutdownTimeout time.Duration
 }
 
 func NewApplication() *Application {
