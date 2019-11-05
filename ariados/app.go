@@ -1,6 +1,8 @@
 package main
 
 import (
+	"io/ioutil"
+	"log"
 	"time"
 
 	cuckoo "github.com/seiflotfy/cuckoofilter"
@@ -77,5 +79,40 @@ func NewApplication() *Application {
 }
 
 func (app *Application) LoadDatabase() {
+	var err error
+	var out []byte
+	var koo *cuckoo.Filter
+
+	// NOTES(yorman): the database was already initialized with 1,000 bytes
+	// when the application was created. Override here with the capacity set
+	// in the server configuration.
 	app.Database = cuckoo.NewFilter(app.Capacity)
+
+	// NOTES(yorman): if the external storage file exists, load its content
+	// into the Cuckoo Filter data structure, otherwise print a warning but
+	// continue with the rest of our business logic.
+	if out, err = ioutil.ReadFile(app.Storage); err != nil {
+		log.Println("LoadDatabase", "ioutil.ReadFile", err)
+		return
+	}
+
+	log.Printf("%d bytes loaded into Cuckoo Filter\n", len(out))
+
+	if koo, err = cuckoo.Decode(out); err != nil {
+		log.Println("LoadDatabase", "cuckoo.Decode", err)
+		return
+	}
+
+	app.Database = koo
+}
+
+func (app *Application) ExportDatabase() {
+	out := app.Database.Encode()
+
+	if err := ioutil.WriteFile(app.Storage, out, 0644); err != nil {
+		log.Println("ExportDatabase", "ioutil.WriteFile", err)
+		return
+	}
+
+	log.Println("ExportDatabase", "ioutil.WriteFile", "success")
 }

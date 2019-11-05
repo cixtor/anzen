@@ -70,6 +70,7 @@ func main() {
 	<-shutdown
 	ctx, cancel := context.WithTimeout(context.Background(), app.ShutdownTimeout)
 	defer cancel()
+	app.ExportDatabase()
 	server.SetKeepAlivesEnabled(false)
 	if err := server.Shutdown(ctx); err != nil {
 		log.Println("server.Shutdown", err)
