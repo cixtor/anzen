@@ -88,6 +88,13 @@ Requests/sec:    414.07
 Transfer/sec:     71.98KB
 ```
 
+In comparison:
+
+- [OpenStreetMap handles 10-20 reqs/sec](http://munin.openstreetmap.org/openstreetmap/puff.openstreetmap-lighttpd_accesses.html)
+- Wikipedia seems to be [30000-70000 reqs/sec](http://toolserver.org/~leon/stats/reqstats/reqstats-weekly.png) spread over [300 servers](http://meta.wikimedia.org/wiki/Wikimedia_servers) (100-200 reqs/sec per machine, most of which is caches)
+- Geograph is getting [7000 images per week](http://www.geograph.org.uk/statistics.php) (1 upload per 95 seconds)
+- [Twitter handles 600 reqs/sec](http://lzhuacuo.blog.com/2011/12/28/scaling-twitter-making-twitter-10000-percent-faster/). Average [200-300 connections per second](http://highscalability.com/blog/2009/6/27/scaling-twitter-making-twitter-10000-percent-faster.html). Spiking to 800 connections per second.
+
 ## Research Notes: Initial Ideas
 
 - Use a [Bloom Filter](https://en.wikipedia.org/wiki/Bloom_filter) to quickly determine if a URL is benign, in which case we can finish the operation fast, otherwise run the malware identifier against it;
