@@ -1,6 +1,6 @@
-# BabyWAF (Rudimentary Web Application Firewall)
+# Anzen (安全) Google Safe Browsing API
 
-The following is a rudimentary implementation of an HTTP proxy with malware scan capabilities. The HTTP proxy is expected to load heavy loads of traffic and execute some operations against each request. If the request is found to be malicious by an internal web service the proxy returns an error to the client, otherwise the request is forwarded to the destination server.
+Anzen (安全) is a web service with a rudimentary implementation of the Google Safe Browsing API to detect and block access to unsafe domain names and URLs known to distribute malware. A web application firewall sitting in front of the website passes each HTTP request to the URL threat analyzer and denies stops the connection if the website is unsafe.
 
 ![architecture](screenshot.png)
 
